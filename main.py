@@ -31,16 +31,34 @@ def validate_entry():
         error_verify = 'Password verification required'
     if verifypass == '' and password == '':
         error_verify = 'Password required'
+    
+    if password != verifypass:
+        error_verify = 'Password verification mismatch'
+    
+    if email != '':
+        if len(email) < 3 or len(email) > 20 or email.count('@') != 1 or email.count('.') != 1 or email.find(' ') != -1:
+            error_email = 'Invalid email'
+
+    if username != '':
+        if len(username) < 3 or len(username) > 20 or username.find(' ') != -1:
+            error_user = 'Invalid username'
+
+    if password != '':
+        if len(password) < 3 or len(password) > 20 or password.find(' ') != -1:
+            error_pass = 'Invalid password'
 
 
-
-    return render_template('index.html', title="Error",
-        style='.error { color: red; }',
-        username=username,
-        error_user=error_user,
-        error_pass=error_pass,
-        error_verify=error_verify,
-        error_email=error_email)
+    if error_user == '' and error_pass == '' and error_verify == '' and error_email == '':
+        return redirect('/welcome?user={0}'.format(username))
+    else:
+        return render_template('index.html', title="Error",
+            style='.error { color: red; }',
+            username=username,
+            email=email,
+            error_user=error_user,
+            error_pass=error_pass,
+            error_verify=error_verify,
+            error_email=error_email)
 
 @app.route('/welcome')
 def welcome():
